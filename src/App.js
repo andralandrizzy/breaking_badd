@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React,{useState, useEffect} from 'react'
+import SeasonsGrid from './components/SeasonsGrid'
+import Showcase from './components/Showcase'
+import Footer from './components/Footer'
+import axios from 'axios'
+import './App.css'
 
-function App() {
+const App = () => {
+  const [items, setItems] = useState([])
+  const [isLoading, setIsloading] = useState(true)
+
+  useEffect(()=>{
+    const fetchItems = async ()=>{
+      const result = await axios('https://www.breakingbadapi.com/api/episodes')
+      console.log(result.data)
+      setIsloading(false)
+      setItems(result.data)
+    };
+    fetchItems();
+  },[])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <section className="main-section">
+      <Showcase/>
+      <SeasonsGrid isLoading={isLoading}  items={items}/>
+      <Footer/>
+    </section>
+  )
 }
 
-export default App;
+export default App
